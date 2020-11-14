@@ -2,38 +2,38 @@
   <mat-toolbar color="primary" fxLayoutAlign="center center">
     <span>KANBAN BOARD</span>
   </mat-toolbar>
-  <br/>
   <div fxLayout="row wrap" cdkDropListGroup>
-    <div fxFlex="25" style="padding: 0.5em" *ngFor="let board of boards">
+    <div fxFlex="25" style="padding: 0.5rem" *ngFor="let board of boards; let indexBoard = index">
       <mat-card style="background: #f5f5f5;">
         <mat-card-title fxLayoutAlign="space-between center">
           <div>{{ board.title | uppercase }} ({{ board.items.length }})</div>
-          <button mat-icon-button><mat-icon color="accent">delete</mat-icon></button>
+          <button mat-icon-button><mat-icon color="accent" (click)="delBoard(indexBoard)">delete</mat-icon></button>
         </mat-card-title>
 
         <mat-card-content>
-          <mat-list cdkDropList [cdkDropListData]="board.items" (cdkDropListDropped)="drop($event)">
-            <mat-list-item cdkDrag *ngFor="let item of board.items"><mat-card fxFlex>{{ item }}</mat-card></mat-list-item>
+          <mat-list cdkDropList [cdkDropListData]="board.items" (cdkDropListDropped)="drop($event)" style="min-height: 2rem; background: #ffffff;">
+            <mat-list-item cdkDrag *ngFor="let item of board.items; let indexTask = index">
+              <mat-card fxFlex fxLayoutAlign="space-between center" style="cursor: move;">
+                {{ item }}
+                <button mat-icon-button><mat-icon (click)="delTask(indexBoard, indexTask)">delete</mat-icon></button>
+              </mat-card>
+            </mat-list-item>
           </mat-list>
         </mat-card-content>
 
-        <form>
-          <mat-form-field fxFlex>
-            <input matInput placeholder="New Job">
-            <button mat-flat-button color="primary" matSuffix>Add</button>
-          </mat-form-field>
-        </form>
+        <mat-form-field style="width: 100%;">
+          <input matInput placeholder="New Job" #inputTask (keyup.enter)="addTask(indexBoard, inputTask)">
+          <button mat-flat-button color="primary" matSuffix (click)="addTask(indexBoard, inputTask)">Add</button>
+        </mat-form-field>
       </mat-card>
     </div>
 
-    <div fxFlex="25" style="padding: 0.5em">
+    <div fxFlex="25" style="padding: 0.5rem">
       <mat-card>
-        <form>
-          <mat-form-field fxFlex>
-            <input matInput placeholder="New List">
-            <button mat-flat-button color="primary" matSuffix><mat-icon>add</mat-icon> Add</button>
-          </mat-form-field>
-        </form>
+        <mat-form-field style="width: 100%;">
+          <input matInput placeholder="New List" #inputTitle (keyup.enter)="addBoard(inputTitle)">
+          <button mat-flat-button color="primary" matSuffix (click)="addBoard(inputTitle)"><mat-icon>add</mat-icon> Add</button>
+        </mat-form-field>
       </mat-card>
     </div>
   </div>
